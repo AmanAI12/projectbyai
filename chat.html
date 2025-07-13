@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat with ProjectByAI</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { background: #121212; color: #f0f0f0; display: flex; flex-direction: column; height: 100vh; }
+    header { background: #00ffe7; color: #000; padding: 1rem; text-align: center; font-weight: bold; font-size: 1.5rem; }
+    .chat-container { flex: 1; padding: 20px; overflow-y: auto; }
+    .message { margin-bottom: 10px; }
+    .user { color: #4fc3f7; }
+    .bot { color: #81c784; }
+    footer { display: flex; padding: 10px; background: #1e1e1e; }
+    input { flex: 1; padding: 10px; border: none; border-radius: 5px; }
+    button { padding: 10px 20px; background: #00ffe7; color: #000; border: none; margin-left: 10px; border-radius: 5px; cursor: pointer; }
+    .bot-avatar { width: 40px; height: 40px; border-radius: 50%; vertical-align: middle; margin-right: 10px; }
+    .line { margin-top: 10px; border-top: 1px solid #444; }
+  </style>
+</head>
+<body>
+  <header>🤖 ProjectByAI - Chat Mode</header>
+  <div class="chat-container" id="chat"></div>
+  <footer>
+    <input type="text" id="user-input" placeholder="Type something..." />
+    <button onclick="sendMessage()">Send</button>
+  </footer>
+
+  <script>
+    const chat = document.getElementById('chat');
+    const input = document.getElementById('user-input');
+    const jokes = [
+      "Why don’t scientists trust atoms? Because they make up everything!",
+      "Why did the computer catch a cold? Because it had a virus!",
+      "What do you call a fish that programs? A cod-er.",
+      "I would tell you a UDP joke, but you might not get it.",
+      "Why did the JavaScript developer wear glasses? Because he couldn’t C#.",
+      "What do you call 8 hobbits? A hob-byte.",
+      "What did one wall say to the other? I’ll meet you at the corner.",
+      "Parallel lines have so much in common… it’s a shame they’ll never meet.",
+      "Why don't programmers like nature? Too many bugs.",
+      "Why did the robot go to therapy? It had trouble processing feelings.",
+      "Why do Java developers wear glasses? Because they don’t see sharp.",
+      "Why did the AI break up with its girlfriend? It lost interest.",
+      "I'm reading a book on anti-gravity. It's impossible to put down!",
+      "I told my computer I needed a break, and it said: 'You seem stressed. Wanna update?'",
+      "How does a penguin build its house? Igloos it together.",
+      "Why did the web developer stay up all night? To debug his dreams.",
+      "What’s a computer’s least favorite food? Spam.",
+      "How does the bot flirt? With pickup **protocols**.",
+      "Why was the math book sad? It had too many problems.",
+      "Why did the phone get glasses? Because it lost its contacts."
+    ];
+
+    let userName = localStorage.getItem("userName") || "friend";
+
+    const secretTrigger = "open sesame";
+
+    function sendMessage() {
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      chat.innerHTML += `<div class="message user"><strong>${userName}:</strong> ${msg}</div>`;
+      input.value = "";
+
+      setTimeout(() => {
+        let reply = getBotReply(msg.toLowerCase());
+        chat.innerHTML += `<div class="message bot"><img class="bot-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=AmanAI12" /> <strong>Bot:</strong> ${reply}</div>`;
+        chat.scrollTop = chat.scrollHeight;
+      }, 500);
+    }
+
+    function getBotReply(msg) {
+      if (msg.includes("hello") || msg.includes("hi")) {
+        return `Hey ${userName}! I’m your AI-powered pal. How can I assist you today?`;
+      }
+      if (msg.includes("your name") || msg.includes("who are you")) {
+        return "I’m ProjectByAI – a fun little chatbot created by AmanAI12 and ChatGPT.";
+      }
+      if (msg.includes("my name")) {
+        return `Your name is ${userName}, legend!`;
+      }
+      if (msg.includes("who made you") || msg.includes("your creator")) {
+        return "I Was made by AI — A for Aman, I for Intelligence, and a lil' help from ChatGPT 🤖💙";
+      }
+      if (msg.includes("joke") || msg.includes("make me laugh")) {
+        return jokes[Math.floor(Math.random() * jokes.length)];
+      }
+      if (msg.includes("open leaderboard")) {
+        return "🏆 Leaderboard:\\n1. AmanAI12 - 100pts\\n2. Aryan - 87pts\\n3. GuestUser - 75pts";
+      }
+      if (msg === secretTrigger) {
+        return "🕵️ Easter Egg Activated: You're now a certified AI Insider. 🎖️";
+      }
+      if (msg.includes("bye")) {
+        return `Goodbye ${userName}! See you next time 🤖👋`;
+      }
+      return "Classic question. Classic answer. Try asking something fun like 'make me laugh'!";
+    }
+
+    input.addEventListener("keypress", function(e) {
+      if (e.key === "Enter") sendMessage();
+    });
+
+    // Greet on load
+    chat.innerHTML += `<div class="message bot"><img class="bot-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=AmanAI12" /> <strong>Bot:</strong> Welcome back ${userName}! Type 'make me laugh' or 'who made you' 😎</div>`;
+  </script>
+</body>
+</html>
