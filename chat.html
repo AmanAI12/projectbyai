@@ -2,24 +2,139 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Chat with ProjectByAI</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-    body { background: #121212; color: #f0f0f0; display: flex; flex-direction: column; height: 100vh; }
-    header { background: #00ffe7; color: #000; padding: 1rem; text-align: center; font-weight: bold; font-size: 1.5rem; }
-    .chat-container { flex: 1; padding: 20px; overflow-y: auto; }
-    .message { margin-bottom: 10px; }
-    .user { color: #4fc3f7; }
-    .bot { color: #81c784; display: flex; align-items: center; gap: 10px; }
-    .bot-avatar { width: 40px; height: 40px; border-radius: 50%; }
-    footer { display: flex; padding: 10px; background: #1e1e1e; }
-    input { flex: 1; padding: 10px; border: none; border-radius: 5px; font-size: 1rem; }
-    button { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background 0.3s; }
-    button:hover { filter: brightness(1.1); }
-    button.send-btn { background: #00ffe7; color: #000; margin-left: 10px; }
-    button.clear-btn { background: #ff4d4d; color: #fff; margin-left: 10px; }
-    pre { white-space: pre-wrap; word-wrap: break-word; margin: 0; }
+    :root {
+      --bg-dark: #121212;
+      --bg-light: #f0f0f0;
+      --text-dark: #f0f0f0;
+      --text-light: #121212;
+      --bot-green: #4caf50;
+      --bot-green-dark: #388e3c;
+      --user-white: #fff;
+      --user-text-dark: #000;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body.light {
+      background-color: var(--bg-light);
+      color: var(--text-light);
+    }
+    header {
+      background: #00ffe7;
+      color: #000;
+      padding: 1rem;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+    .chat-container {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background-color: inherit;
+      transition: background-color 0.3s;
+    }
+    .message {
+      max-width: 70%;
+      padding: 10px 15px;
+      border-radius: 20px;
+      font-size: 1rem;
+      line-height: 1.4;
+      word-wrap: break-word;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .user {
+      background-color: var(--user-white);
+      color: var(--user-text-dark);
+      align-self: flex-end;
+      border-bottom-right-radius: 0;
+      justify-content: flex-end;
+    }
+    .bot {
+      background-color: var(--bot-green);
+      color: #fff;
+      align-self: flex-start;
+      border-bottom-left-radius: 0;
+    }
+    .bot.light {
+      background-color: var(--bot-green-dark);
+    }
+    .bot-avatar {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    footer {
+      display: flex;
+      padding: 10px;
+      background: #1e1e1e;
+      transition: background-color 0.3s;
+    }
+    body.light footer {
+      background: #ddd;
+    }
+    input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      outline-offset: 0;
+      transition: background-color 0.3s, color 0.3s;
+      background-color: #222;
+      color: var(--text-dark);
+    }
+    body.light input {
+      background-color: #fff;
+      color: var(--text-light);
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s, filter 0.3s;
+      margin-left: 10px;
+    }
+    button.send-btn {
+      background: #00ffe7;
+      color: #000;
+    }
+    button.send-btn:hover {
+      filter: brightness(1.1);
+    }
+    button.clear-btn {
+      background: #ff4d4d;
+      color: #fff;
+    }
+    button.clear-btn:hover {
+      filter: brightness(1.1);
+    }
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: inherit;
+      font-size: inherit;
+      color: inherit;
+    }
   </style>
 </head>
 <body>
@@ -58,16 +173,10 @@
       "Why did the phone get glasses? Because it lost its contacts."
     ];
 
-    // Persistent joke tracking indexes in localStorage
     let usedJokes = JSON.parse(localStorage.getItem('usedJokes')) || [];
-
-    // Persistent leaderboard stored in localStorage
     let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || {};
-
-    // Name memory from localStorage or fallback
     let userName = localStorage.getItem("userName") || "";
 
-    // If no name, prompt user (you can also redirect to homepage if you prefer)
     if (!userName) {
       userName = prompt("Hey! What's your name?");
       if (!userName) userName = "friend";
@@ -75,6 +184,8 @@
     }
 
     const secretTrigger = "!";
+
+    let isDarkTheme = true;
 
     function sendMessage() {
       const msg = input.value.trim();
@@ -98,18 +209,18 @@
         avatar.src = "https://api.dicebear.com/7.x/bottts/svg?seed=AmanAI12";
         avatar.alt = "Bot Avatar";
         avatar.className = "bot-avatar";
+        if(!isDarkTheme) avatar.classList.add('light');
         messageDiv.appendChild(avatar);
 
         const textSpan = document.createElement('pre');
         textSpan.innerHTML = text;
         messageDiv.appendChild(textSpan);
       } else {
-        messageDiv.innerHTML = `<strong>${sender}:</strong> ${text}`;
+        messageDiv.innerHTML = `<pre><strong>${sender}:</strong> ${text}</pre>`;
       }
       chat.appendChild(messageDiv);
     }
 
-    // Returns a joke not repeated until all used, then resets
     function getRandomJoke() {
       if (usedJokes.length >= jokesMaster.length) {
         usedJokes = [];
@@ -122,6 +233,10 @@
     }
 
     function getBotReply(msg) {
+      if (msg === "change theme") {
+        toggleTheme();
+        return `Theme changed to ${isDarkTheme ? "dark" : "light"} mode! 🌗`;
+      }
       if (msg.includes("hello") || msg.includes("hi")) {
         return `Hey ${userName}! I’m your AI-powered pal. How can I assist you today?`;
       }
@@ -176,14 +291,17 @@
       }
     }
 
+    function toggleTheme() {
+      isDarkTheme = !isDarkTheme;
+      document.body.classList.toggle('light', !isDarkTheme);
+    }
+
     input.addEventListener("keypress", function(e) {
       if (e.key === "Enter") sendMessage();
     });
 
-    // Greet on load
-    appendMessage("Bot", `Welcome back ${userName}! Type 'make me laugh', 'open leaderboard', or try the secret '!' 😉`, 'bot');
-
-    // Scroll chat container to bottom
+    // Initial greeting
+    appendMessage("Bot", `Welcome back ${userName}! Type 'make me laugh', 'open leaderboard', 'change theme', or try the secret '!' 😉`, 'bot');
     chat.scrollTop = chat.scrollHeight;
   </script>
 </body>
