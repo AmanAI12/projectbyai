@@ -11,26 +11,28 @@
     .chat-container { flex: 1; padding: 20px; overflow-y: auto; }
     .message { margin-bottom: 10px; }
     .user { color: #4fc3f7; }
-    .bot { color: #81c784; }
+    .bot { color: #81c784; display: flex; align-items: center; gap: 10px; }
+    .bot-avatar { width: 40px; height: 40px; border-radius: 50%; }
     footer { display: flex; padding: 10px; background: #1e1e1e; }
-    input { flex: 1; padding: 10px; border: none; border-radius: 5px; }
-    button { padding: 10px 20px; background: #00ffe7; color: #000; border: none; margin-left: 10px; border-radius: 5px; cursor: pointer; }
-    .bot-avatar { width: 40px; height: 40px; border-radius: 50%; vertical-align: middle; margin-right: 10px; }
-    .line { margin-top: 10px; border-top: 1px solid #444; }
+    input { flex: 1; padding: 10px; border: none; border-radius: 5px; font-size: 1rem; }
+    button { padding: 10px 20px; background: #00ffe7; color: #000; border: none; margin-left: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background 0.3s; }
+    button:hover { background: #00bfa6; }
+    pre { white-space: pre-wrap; word-wrap: break-word; margin: 0; }
   </style>
 </head>
 <body>
   <header>🤖 ProjectByAI - Chat Mode</header>
   <div class="chat-container" id="chat"></div>
   <footer>
-    <input type="text" id="user-input" placeholder="Type something..." />
+    <input type="text" id="user-input" placeholder="Type something..." autocomplete="off" />
     <button onclick="sendMessage()">Send</button>
   </footer>
 
   <script>
     const chat = document.getElementById('chat');
     const input = document.getElementById('user-input');
-    const jokes = [
+
+    const jokesMaster = [
       "Why don’t scientists trust atoms? Because they make up everything!",
       "Why did the computer catch a cold? Because it had a virus!",
       "What do you call a fish that programs? A cod-er.",
@@ -53,22 +55,55 @@
       "Why did the phone get glasses? Because it lost its contacts."
     ];
 
+    // Clone for tracking used jokes
+    let jokes = [...jokesMaster];
+
+    // Leaderboard object {username: points}
+    let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || {};
+
     let userName = localStorage.getItem("userName") || "friend";
 
-    const secretTrigger = "open sesame";
+    const secretTrigger = "!";
 
     function sendMessage() {
       const msg = input.value.trim();
       if (!msg) return;
 
-      chat.innerHTML += `<div class="message user"><strong>${userName}:</strong> ${msg}</div>`;
+      appendMessage(userName, msg, 'user');
       input.value = "";
 
       setTimeout(() => {
         let reply = getBotReply(msg.toLowerCase());
-        chat.innerHTML += `<div class="message bot"><img class="bot-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=AmanAI12" /> <strong>Bot:</strong> ${reply}</div>`;
+        appendMessage("Bot", reply, 'bot');
         chat.scrollTop = chat.scrollHeight;
-      }, 500);
+      }, 400);
+    }
+
+    function appendMessage(sender, text, type) {
+      const messageDiv = document.createElement('div');
+      messageDiv.classList.add('message', type);
+      if(type === 'bot') {
+        const avatar = document.createElement('img');
+        avatar.src = "https://api.dicebear.com/7.x/bottts/svg?seed=AmanAI12";
+        avatar.alt = "Bot Avatar";
+        avatar.className = "bot-avatar";
+        messageDiv.appendChild(avatar);
+
+        const textSpan = document.createElement('pre');
+        textSpan.innerHTML = text;
+        messageDiv.appendChild(textSpan);
+      } else {
+        messageDiv.innerHTML = `<strong>${sender}:</strong> ${text}`;
+      }
+      chat.appendChild(messageDiv);
+    }
+
+    // Picks a random joke without repeats until exhausted, then resets
+    function getRandomJoke() {
+      if(jokes.length === 0) jokes = [...jokesMaster]; // reset jokes when all used
+      const index = Math.floor(Math.random() * jokes.length);
+      const joke = jokes.splice(index, 1)[0];
+      return joke;
     }
 
     function getBotReply(msg) {
@@ -85,13 +120,17 @@
         return "I Was made by AI — A for Aman, I for Intelligence, and a lil' help from ChatGPT 🤖💙";
       }
       if (msg.includes("joke") || msg.includes("make me laugh")) {
-        return jokes[Math.floor(Math.random() * jokes.length)];
+        // Add 5 points for joke request
+        updateLeaderboard(userName, 5);
+        return getRandomJoke();
       }
       if (msg.includes("open leaderboard")) {
-        return "🏆 Leaderboard:\\n1. AmanAI12 - 100pts\\n2. Aryan - 87pts\\n3. GuestUser - 75pts";
+        return formatLeaderboard();
       }
       if (msg === secretTrigger) {
-        return "🕵️ Easter Egg Activated: You're now a certified AI Insider. 🎖️";
+        // Add 50 points for secret found
+        updateLeaderboard(userName, 50);
+        return "🕵️ Easter Egg Activated: You're now a certified AI Insider. 🎖️ +50 points!";
       }
       if (msg.includes("bye")) {
         return `Goodbye ${userName}! See you next time 🤖👋`;
@@ -99,12 +138,31 @@
       return "Classic question. Classic answer. Try asking something fun like 'make me laugh'!";
     }
 
+    function updateLeaderboard(user, points) {
+      if (!leaderboard[user]) leaderboard[user] = 0;
+      leaderboard[user] += points;
+      localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+    }
+
+    function formatLeaderboard() {
+      let sorted = Object.entries(leaderboard).sort((a,b) => b[1]-a[1]);
+      if(sorted.length === 0) return "🏆 Leaderboard is empty. Be the first to earn points!";
+      let text = "🏆 Leaderboard:\n";
+      sorted.slice(0, 10).forEach(([user, pts], i) => {
+        text += `${i+1}. ${user} - ${pts} pts\n`;
+      });
+      return text.trim();
+    }
+
     input.addEventListener("keypress", function(e) {
       if (e.key === "Enter") sendMessage();
     });
 
     // Greet on load
-    chat.innerHTML += `<div class="message bot"><img class="bot-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=AmanAI12" /> <strong>Bot:</strong> Welcome back ${userName}! Type 'make me laugh' or 'who made you' 😎</div>`;
+    appendMessage("Bot", `Welcome back ${userName}! Type 'make me laugh', 'open leaderboard', or try the secret! 😎`, 'bot');
+
+    // Scroll chat container to bottom
+    chat.scrollTop = chat.scrollHeight;
   </script>
 </body>
 </html>
