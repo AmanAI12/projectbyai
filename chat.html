@@ -187,6 +187,25 @@
 
     let isDarkTheme = true;
 
+    // Quiz data and state
+    const quizQuestions = [
+      {
+        question: "What is the capital of India?",
+        answer: "new delhi"
+      },
+      {
+        question: "Which language is used for web apps?",
+        answer: "javascript"
+      },
+      {
+        question: "What does CPU stand for?",
+        answer: "central processing unit"
+      }
+    ];
+    let quizActive = false;
+    let quizIndex = 0;
+    let quizScore = 0;
+
     function sendMessage() {
       const msg = input.value.trim();
       if (!msg) return;
@@ -195,7 +214,12 @@
       input.value = "";
 
       setTimeout(() => {
-        let reply = getBotReply(msg.toLowerCase());
+        let reply;
+        if (quizActive) {
+          reply = handleQuizAnswer(msg.toLowerCase());
+        } else {
+          reply = getBotReply(msg.toLowerCase());
+        }
         appendMessage("Bot", reply, 'bot');
         chat.scrollTop = chat.scrollHeight;
       }, 400);
@@ -237,6 +261,13 @@
         toggleTheme();
         return `Theme changed to ${isDarkTheme ? "dark" : "light"} mode! 🌗`;
       }
+      if (msg === "start quiz") {
+        if (quizActive) return "Quiz is already active! Please answer the current question.";
+        quizActive = true;
+        quizIndex = 0;
+        quizScore = 0;
+        return "Quiz started! Here's your first question:\n" + quizQuestions[quizIndex].question;
+      }
       if (msg.includes("hello") || msg.includes("hi")) {
         return `Hey ${userName}! I’m your AI-powered pal. How can I assist you today?`;
       }
@@ -263,7 +294,26 @@
       if (msg.includes("bye")) {
         return `Goodbye ${userName}! See you next time 🤖👋`;
       }
-      return "Classic question. Classic answer. Try asking something fun like 'make me laugh'!";
+      return "Classic question. Classic answer. Try asking something fun like 'make me laugh' or 'start quiz'!";
+    }
+
+    function handleQuizAnswer(answer) {
+      const correctAnswer = quizQuestions[quizIndex].answer.toLowerCase().trim();
+      if (answer === correctAnswer) {
+        quizScore++;
+        updateLeaderboard(userName, 10);
+        let reply = "✅ Correct! ";
+        quizIndex++;
+        if (quizIndex < quizQuestions.length) {
+          reply += "Next question:\n" + quizQuestions[quizIndex].question;
+        } else {
+          reply += `Quiz finished! You scored ${quizScore} out of ${quizQuestions.length}.\nType 'start quiz' to play again or ask me anything else!`;
+          quizActive = false;
+        }
+        return reply;
+      } else {
+        return "❌ Oops, that's not correct. Try again!";
+      }
     }
 
     function updateLeaderboard(user, points) {
@@ -301,7 +351,7 @@
     });
 
     // Initial greeting
-    appendMessage("Bot", `Welcome back ${userName}! Type 'make me laugh', 'open leaderboard', 'change theme', or try the secret '!' 😉`, 'bot');
+    appendMessage("Bot", `Welcome back ${userName}! Type 'make me laugh', 'open leaderboard', 'start quiz', 'change theme', or try the secret '!' 😉`, 'bot');
     chat.scrollTop = chat.scrollHeight;
   </script>
 </body>
