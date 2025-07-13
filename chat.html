@@ -15,8 +15,10 @@
     .bot-avatar { width: 40px; height: 40px; border-radius: 50%; }
     footer { display: flex; padding: 10px; background: #1e1e1e; }
     input { flex: 1; padding: 10px; border: none; border-radius: 5px; font-size: 1rem; }
-    button { padding: 10px 20px; background: #00ffe7; color: #000; border: none; margin-left: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background 0.3s; }
-    button:hover { background: #00bfa6; }
+    button { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background 0.3s; }
+    button:hover { filter: brightness(1.1); }
+    button.send-btn { background: #00ffe7; color: #000; margin-left: 10px; }
+    button.clear-btn { background: #ff4d4d; color: #fff; margin-left: 10px; }
     pre { white-space: pre-wrap; word-wrap: break-word; margin: 0; }
   </style>
 </head>
@@ -25,7 +27,8 @@
   <div class="chat-container" id="chat"></div>
   <footer>
     <input type="text" id="user-input" placeholder="Type something..." autocomplete="off" />
-    <button onclick="sendMessage()">Send</button>
+    <button class="send-btn" onclick="sendMessage()">Send</button>
+    <button class="clear-btn" onclick="clearMemory()">Clear Memory</button>
   </footer>
 
   <script>
@@ -55,13 +58,21 @@
       "Why did the phone get glasses? Because it lost its contacts."
     ];
 
-    // Clone for tracking used jokes
-    let jokes = [...jokesMaster];
+    // Persistent joke tracking indexes in localStorage
+    let usedJokes = JSON.parse(localStorage.getItem('usedJokes')) || [];
 
-    // Leaderboard object {username: points}
+    // Persistent leaderboard stored in localStorage
     let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || {};
 
-    let userName = localStorage.getItem("userName") || "friend";
+    // Name memory from localStorage or fallback
+    let userName = localStorage.getItem("userName") || "";
+
+    // If no name, prompt user (you can also redirect to homepage if you prefer)
+    if (!userName) {
+      userName = prompt("Hey! What's your name?");
+      if (!userName) userName = "friend";
+      localStorage.setItem("userName", userName);
+    }
 
     const secretTrigger = "!";
 
@@ -98,12 +109,16 @@
       chat.appendChild(messageDiv);
     }
 
-    // Picks a random joke without repeats until exhausted, then resets
+    // Returns a joke not repeated until all used, then resets
     function getRandomJoke() {
-      if(jokes.length === 0) jokes = [...jokesMaster]; // reset jokes when all used
-      const index = Math.floor(Math.random() * jokes.length);
-      const joke = jokes.splice(index, 1)[0];
-      return joke;
+      if (usedJokes.length >= jokesMaster.length) {
+        usedJokes = [];
+      }
+      const availableIndexes = jokesMaster.map((_, i) => i).filter(i => !usedJokes.includes(i));
+      const index = availableIndexes[Math.floor(Math.random() * availableIndexes.length)];
+      usedJokes.push(index);
+      localStorage.setItem('usedJokes', JSON.stringify(usedJokes));
+      return jokesMaster[index];
     }
 
     function getBotReply(msg) {
@@ -120,7 +135,6 @@
         return "I Was made by AI — A for Aman, I for Intelligence, and a lil' help from ChatGPT 🤖💙";
       }
       if (msg.includes("joke") || msg.includes("make me laugh")) {
-        // Add 5 points for joke request
         updateLeaderboard(userName, 5);
         return getRandomJoke();
       }
@@ -128,7 +142,6 @@
         return formatLeaderboard();
       }
       if (msg === secretTrigger) {
-        // Add 50 points for secret found
         updateLeaderboard(userName, 50);
         return "🕵️ Easter Egg Activated: You're now a certified AI Insider. 🎖️ +50 points!";
       }
@@ -145,8 +158,8 @@
     }
 
     function formatLeaderboard() {
-      let sorted = Object.entries(leaderboard).sort((a,b) => b[1]-a[1]);
-      if(sorted.length === 0) return "🏆 Leaderboard is empty. Be the first to earn points!";
+      const sorted = Object.entries(leaderboard).sort((a,b) => b[1]-a[1]);
+      if (sorted.length === 0) return "🏆 Leaderboard is empty. Be the first to earn points!";
       let text = "🏆 Leaderboard:\n";
       sorted.slice(0, 10).forEach(([user, pts], i) => {
         text += `${i+1}. ${user} - ${pts} pts\n`;
@@ -154,12 +167,21 @@
       return text.trim();
     }
 
+    function clearMemory() {
+      if(confirm("Are you sure you want to clear all memory? This will reset your name, points, and jokes used.")) {
+        localStorage.removeItem('userName');
+        localStorage.removeItem('leaderboard');
+        localStorage.removeItem('usedJokes');
+        location.reload();
+      }
+    }
+
     input.addEventListener("keypress", function(e) {
       if (e.key === "Enter") sendMessage();
     });
 
     // Greet on load
-    appendMessage("Bot", `Welcome back ${userName}! Type 'make me laugh', 'open leaderboard', or try the secret! 😎`, 'bot');
+    appendMessage("Bot", `Welcome back ${userName}! Type 'make me laugh', 'open leaderboard', or try the secret '!' 😉`, 'bot');
 
     // Scroll chat container to bottom
     chat.scrollTop = chat.scrollHeight;
