@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ProjectByAI - Welcome</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
+    body { background: linear-gradient(135deg, #0f0f0f, #1f1f1f); color: #00ffe7; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; }
+    h1 { font-size: 3rem; margin-bottom: 10px; text-shadow: 0 0 10px #00ffe7; }
+    p { font-size: 1.2rem; margin-bottom: 30px; color: #ccc; }
+    input { padding: 10px 20px; font-size: 1rem; border: none; border-radius: 30px; outline: none; background: #222; color: #00ffe7; margin-bottom: 20px; width: 250px; text-align: center; }
+    .btns { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+    button { padding: 10px 20px; font-size: 1rem; border-radius: 30px; border: none; background: #00ffe7; color: #000; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 0 10px #00ffe7; }
+    button:hover { background: #00bfa6; }
+    footer { position: absolute; bottom: 10px; font-size: 0.8rem; color: #555; }
+    footer a { color: #00ffe7; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h1>👾 ProjectByAI</h1>
+  <p>Your friendly, smart, and custom chatbot experience 💬</p>
+
+  <input type="text" id="username" placeholder="Enter your name..." />
+
+  <div class="btns">
+    <button onclick="goToChat()">💬 Enter Chatbot</button>
+    <button onclick="alert('I was made by AI — A for Aman, I for Intelligence ✨')">🤖 Meet the Bot</button>
+  </div>
+
+  <footer>
+    Built with 💙 by AmanAI12 & ChatGPT • 
+    <a href="https://www.youtube.com/@itsdalilboi" target="_blank">YouTube @itsdalilboi</a>
+  </footer>
+
+  <script>
+    function goToChat() {
+      const name = document.getElementById('username').value.trim();
+      if (name) localStorage.setItem("userName", name);
+      window.location.href = "chat.html";
+    }
+  </script>
+</body>
+</html>
