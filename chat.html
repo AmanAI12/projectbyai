@@ -1,358 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Chat with ProjectByAI</title>
-  <style>
-    :root {
-      --bg-dark: #121212;
-      --bg-light: #f0f0f0;
-      --text-dark: #f0f0f0;
-      --text-light: #121212;
-      --bot-green: #4caf50;
-      --bot-green-dark: #388e3c;
-      --user-white: #fff;
-      --user-text-dark: #000;
-    }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: var(--bg-dark);
-      color: var(--text-dark);
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      transition: background-color 0.3s, color 0.3s;
-    }
-    body.light {
-      background-color: var(--bg-light);
-      color: var(--text-light);
-    }
-    header {
-      background: #00ffe7;
-      color: #000;
-      padding: 1rem;
-      text-align: center;
-      font-weight: bold;
-      font-size: 1.5rem;
-    }
-    .chat-container {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      background-color: inherit;
-      transition: background-color 0.3s;
-    }
-    .message {
-      max-width: 70%;
-      padding: 10px 15px;
-      border-radius: 20px;
-      font-size: 1rem;
-      line-height: 1.4;
-      word-wrap: break-word;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .user {
-      background-color: var(--user-white);
-      color: var(--user-text-dark);
-      align-self: flex-end;
-      border-bottom-right-radius: 0;
-      justify-content: flex-end;
-    }
-    .bot {
-      background-color: var(--bot-green);
-      color: #fff;
-      align-self: flex-start;
-      border-bottom-left-radius: 0;
-    }
-    .bot.light {
-      background-color: var(--bot-green-dark);
-    }
-    .bot-avatar {
-      width: 35px;
-      height: 35px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-    footer {
-      display: flex;
-      padding: 10px;
-      background: #1e1e1e;
-      transition: background-color 0.3s;
-    }
-    body.light footer {
-      background: #ddd;
-    }
-    input {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      font-size: 1rem;
-      outline-offset: 0;
-      transition: background-color 0.3s, color 0.3s;
-      background-color: #222;
-      color: var(--text-dark);
-    }
-    body.light input {
-      background-color: #fff;
-      color: var(--text-light);
-    }
-    button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background 0.3s, filter 0.3s;
-      margin-left: 10px;
-    }
-    button.send-btn {
-      background: #00ffe7;
-      color: #000;
-    }
-    button.send-btn:hover {
-      filter: brightness(1.1);
-    }
-    button.clear-btn {
-      background: #ff4d4d;
-      color: #fff;
-    }
-    button.clear-btn:hover {
-      filter: brightness(1.1);
-    }
-    pre {
-      margin: 0;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      font-family: inherit;
-      font-size: inherit;
-      color: inherit;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Chat with ProjectByAI</title>
+<style>
+  /* ... your existing styles ... */
+  /* Add these new styles for code block & buttons */
+  .code-block {
+    background: #222;
+    color: #0f0;
+    padding: 15px;
+    border-radius: 10px;
+    white-space: pre-wrap;
+    font-family: 'Courier New', Courier, monospace;
+    max-width: 80vw;
+    margin: 10px 0;
+    box-shadow: 0 0 10px #0f0;
+    position: relative;
+  }
+  .code-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .code-btn {
+    background: #00ffe7;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #000;
+    transition: background-color 0.3s ease;
+  }
+  .code-btn:hover {
+    background-color: #00bfa6;
+  }
+</style>
 </head>
 <body>
-  <header>🤖 ProjectByAI - Chat Mode</header>
-  <div class="chat-container" id="chat"></div>
-  <footer>
-    <input type="text" id="user-input" placeholder="Type something..." autocomplete="off" />
-    <button class="send-btn" onclick="sendMessage()">Send</button>
-    <button class="clear-btn" onclick="clearMemory()">Clear Memory</button>
-  </footer>
+<header>🤖 ProjectByAI - Chat Mode</header>
+<div class="chat-container" id="chat"></div>
+<footer>
+  <input type="text" id="user-input" placeholder="Type something..." autocomplete="off" />
+  <button class="send-btn" onclick="sendMessage()">Send</button>
+  <button class="clear-btn" onclick="clearMemory()">Clear Memory</button>
+</footer>
+<script>
+  const chat = document.getElementById('chat');
+  const input = document.getElementById('user-input');
+  let userName = localStorage.getItem("userName") || "friend";
+  let isDarkTheme = true;
+
+  const htmlScriptCode = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Simple Alert Button</title>
+</head>
+<body>
+  <button onclick="sayHello()">Click Me</button>
 
   <script>
-    const chat = document.getElementById('chat');
-    const input = document.getElementById('user-input');
-
-    const jokesMaster = [
-      "Why don’t scientists trust atoms? Because they make up everything!",
-      "Why did the computer catch a cold? Because it had a virus!",
-      "What do you call a fish that programs? A cod-er.",
-      "I would tell you a UDP joke, but you might not get it.",
-      "Why did the JavaScript developer wear glasses? Because he couldn’t C#.",
-      "What do you call 8 hobbits? A hob-byte.",
-      "What did one wall say to the other? I’ll meet you at the corner.",
-      "Parallel lines have so much in common… it’s a shame they’ll never meet.",
-      "Why don't programmers like nature? Too many bugs.",
-      "Why did the robot go to therapy? It had trouble processing feelings.",
-      "Why do Java developers wear glasses? Because they don’t see sharp.",
-      "Why did the AI break up with its girlfriend? It lost interest.",
-      "I'm reading a book on anti-gravity. It's impossible to put down!",
-      "I told my computer I needed a break, and it said: 'You seem stressed. Wanna update?'",
-      "How does a penguin build its house? Igloos it together.",
-      "Why did the web developer stay up all night? To debug his dreams.",
-      "What’s a computer’s least favorite food? Spam.",
-      "How does the bot flirt? With pickup **protocols**.",
-      "Why was the math book sad? It had too many problems.",
-      "Why did the phone get glasses? Because it lost its contacts."
-    ];
-
-    let usedJokes = JSON.parse(localStorage.getItem('usedJokes')) || [];
-    let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || {};
-    let userName = localStorage.getItem("userName") || "";
-
-    if (!userName) {
-      userName = prompt("Hey! What's your name?");
-      if (!userName) userName = "friend";
-      localStorage.setItem("userName", userName);
+    function sayHello() {
+      alert("Hello!");
     }
-
-    const secretTrigger = "!";
-
-    let isDarkTheme = true;
-
-    // Quiz data and state
-    const quizQuestions = [
-      {
-        question: "What is the capital of India?",
-        answer: "new delhi"
-      },
-      {
-        question: "Which language is used for web apps?",
-        answer: "javascript"
-      },
-      {
-        question: "What does CPU stand for?",
-        answer: "central processing unit"
-      }
-    ];
-    let quizActive = false;
-    let quizIndex = 0;
-    let quizScore = 0;
-
-    function sendMessage() {
-      const msg = input.value.trim();
-      if (!msg) return;
-
-      appendMessage(userName, msg, 'user');
-      input.value = "";
-
-      setTimeout(() => {
-        let reply;
-        if (quizActive) {
-          reply = handleQuizAnswer(msg.toLowerCase());
-        } else {
-          reply = getBotReply(msg.toLowerCase());
-        }
-        appendMessage("Bot", reply, 'bot');
-        chat.scrollTop = chat.scrollHeight;
-      }, 400);
-    }
-
-    function appendMessage(sender, text, type) {
-      const messageDiv = document.createElement('div');
-      messageDiv.classList.add('message', type);
-      if(type === 'bot') {
-        const avatar = document.createElement('img');
-        avatar.src = "https://api.dicebear.com/7.x/bottts/svg?seed=AmanAI12";
-        avatar.alt = "Bot Avatar";
-        avatar.className = "bot-avatar";
-        if(!isDarkTheme) avatar.classList.add('light');
-        messageDiv.appendChild(avatar);
-
-        const textSpan = document.createElement('pre');
-        textSpan.innerHTML = text;
-        messageDiv.appendChild(textSpan);
-      } else {
-        messageDiv.innerHTML = `<pre><strong>${sender}:</strong> ${text}</pre>`;
-      }
-      chat.appendChild(messageDiv);
-    }
-
-    function getRandomJoke() {
-      if (usedJokes.length >= jokesMaster.length) {
-        usedJokes = [];
-      }
-      const availableIndexes = jokesMaster.map((_, i) => i).filter(i => !usedJokes.includes(i));
-      const index = availableIndexes[Math.floor(Math.random() * availableIndexes.length)];
-      usedJokes.push(index);
-      localStorage.setItem('usedJokes', JSON.stringify(usedJokes));
-      return jokesMaster[index];
-    }
-
-    function getBotReply(msg) {
-      if (msg === "change theme") {
-        toggleTheme();
-        return `Theme changed to ${isDarkTheme ? "dark" : "light"} mode! 🌗`;
-      }
-      if (msg === "start quiz") {
-        if (quizActive) return "Quiz is already active! Please answer the current question.";
-        quizActive = true;
-        quizIndex = 0;
-        quizScore = 0;
-        return "Quiz started! Here's your first question:\n" + quizQuestions[quizIndex].question;
-      }
-      if (msg.includes("hello") || msg.includes("hi")) {
-        return `Hey ${userName}! I’m your AI-powered pal. How can I assist you today?`;
-      }
-      if (msg.includes("your name") || msg.includes("who are you")) {
-        return "I’m ProjectByAI – a fun little chatbot created by AmanAI12 and ChatGPT.";
-      }
-      if (msg.includes("my name")) {
-        return `Your name is ${userName}, legend!`;
-      }
-      if (msg.includes("who made you") || msg.includes("your creator")) {
-        return "I Was made by AI — A for Aman, I for Intelligence, and a lil' help from ChatGPT 🤖💙";
-      }
-      if (msg.includes("joke") || msg.includes("make me laugh")) {
-        updateLeaderboard(userName, 5);
-        return getRandomJoke();
-      }
-      if (msg.includes("open leaderboard")) {
-        return formatLeaderboard();
-      }
-      if (msg === secretTrigger) {
-        updateLeaderboard(userName, 50);
-        return "🕵️ Easter Egg Activated: You're now a certified AI Insider. 🎖️ +50 points!";
-      }
-      if (msg.includes("bye")) {
-        return `Goodbye ${userName}! See you next time 🤖👋`;
-      }
-      return "Classic question. Classic answer. Try asking something fun like 'make me laugh' or 'start quiz'!";
-    }
-
-    function handleQuizAnswer(answer) {
-      const correctAnswer = quizQuestions[quizIndex].answer.toLowerCase().trim();
-      if (answer === correctAnswer) {
-        quizScore++;
-        updateLeaderboard(userName, 10);
-        let reply = "✅ Correct! ";
-        quizIndex++;
-        if (quizIndex < quizQuestions.length) {
-          reply += "Next question:\n" + quizQuestions[quizIndex].question;
-        } else {
-          reply += `Quiz finished! You scored ${quizScore} out of ${quizQuestions.length}.\nType 'start quiz' to play again or ask me anything else!`;
-          quizActive = false;
-        }
-        return reply;
-      } else {
-        return "❌ Oops, that's not correct. Try again!";
-      }
-    }
-
-    function updateLeaderboard(user, points) {
-      if (!leaderboard[user]) leaderboard[user] = 0;
-      leaderboard[user] += points;
-      localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-    }
-
-    function formatLeaderboard() {
-      const sorted = Object.entries(leaderboard).sort((a,b) => b[1]-a[1]);
-      if (sorted.length === 0) return "🏆 Leaderboard is empty. Be the first to earn points!";
-      let text = "🏆 Leaderboard:\n";
-      sorted.slice(0, 10).forEach(([user, pts], i) => {
-        text += `${i+1}. ${user} - ${pts} pts\n`;
-      });
-      return text.trim();
-    }
-
-    function clearMemory() {
-      if(confirm("Are you sure you want to clear all memory? This will reset your name, points, and jokes used.")) {
-        localStorage.removeItem('userName');
-        localStorage.removeItem('leaderboard');
-        localStorage.removeItem('usedJokes');
-        location.reload();
-      }
-    }
-
-    function toggleTheme() {
-      isDarkTheme = !isDarkTheme;
-      document.body.classList.toggle('light', !isDarkTheme);
-    }
-
-    input.addEventListener("keypress", function(e) {
-      if (e.key === "Enter") sendMessage();
-    });
-
-    // Initial greeting
-    appendMessage("Bot", `Welcome back ${userName}! Type 'make me laugh', 'open leaderboard', 'start quiz', 'change theme', or try the secret '!' 😉`, 'bot');
-    chat.scrollTop = chat.scrollHeight;
   </script>
+</body>
+</html>`;
+
+  function getBotReply(msg) {
+    msg = msg.toLowerCase();
+    if (msg.includes("html script")) {
+      return { type: "code", content: htmlScriptCode };
+    }
+    if (msg.includes("hello")) {
+      return `Hey ${userName}! I’m your AI-powered pal. How can I assist you today?`;
+    }
+    if (msg.includes("make me laugh") || msg.includes("joke")) {
+      return "Why don’t scientists trust atoms? Because they make up everything!";
+    }
+    return "Classic question. Classic answer. Try asking something fun like 'make me laugh' or 'start quiz'!";
+  }
+
+  function appendMessage(sender, data, type) {
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add("message", type);
+
+    if (type === "bot") {
+      const avatar = document.createElement("img");
+      avatar.src = "https://api.dicebear.com/7.x/bottts/svg?seed=AmanAI12";
+      avatar.alt = "Bot Avatar";
+      avatar.className = "bot-avatar";
+      if (!isDarkTheme) avatar.classList.add("light");
+      messageDiv.appendChild(avatar);
+
+      if (typeof data === "object" && data.type === "code") {
+        const codeBlock = document.createElement("pre");
+        codeBlock.className = "code-block";
+        codeBlock.textContent = data.content;
+        messageDiv.appendChild(codeBlock);
+
+        const btnContainer = document.createElement("div");
+        btnContainer.className = "code-buttons";
+
+        const copyBtn = document.createElement("button");
+        copyBtn.className = "code-btn";
+        copyBtn.textContent = "Copy";
+        copyBtn.onclick = () => {
+          navigator.clipboard.writeText(data.content).then(() => {
+            copyBtn.textContent = "Copied!";
+            setTimeout(() => (copyBtn.textContent = "Copy"), 1500);
+          });
+        };
+        btnContainer.appendChild(copyBtn);
+
+        const testBtn = document.createElement("button");
+        testBtn.className = "code-btn";
+        testBtn.textContent = "Test";
+        testBtn.onclick = () => {
+          const newWindow = window.open();
+          newWindow.document.write(data.content);
+          newWindow.document.close();
+        };
+        btnContainer.appendChild(testBtn);
+
+        messageDiv.appendChild(btnContainer);
+      } else {
+        const textSpan = document.createElement("pre");
+        textSpan.innerHTML = data;
+        messageDiv.appendChild(textSpan);
+      }
+    } else {
+      messageDiv.innerHTML = `<pre><strong>${sender}:</strong> ${data}</pre>`;
+    }
+
+    chat.appendChild(messageDiv);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function sendMessage() {
+    const msg = input.value.trim();
+    if (!msg) return;
+
+    appendMessage(userName, msg, "user");
+    input.value = "";
+
+    setTimeout(() => {
+      const reply = getBotReply(msg);
+      appendMessage("Bot", reply, "bot");
+      chat.scrollTop = chat.scrollHeight;
+    }, 400);
+  }
+
+  function clearMemory() {
+    if (confirm("Are you sure you want to clear all memory?")) {
+      localStorage.clear();
+      location.reload();
+    }
+  }
+
+  input.addEventListener("keypress", e => {
+    if (e.key === "Enter") sendMessage();
+  });
+
+  appendMessage("Bot", `Welcome back ${userName}! Type 'html script' to see a cool demo with copy & test buttons!`, "bot");
+</script>
 </body>
 </html>
