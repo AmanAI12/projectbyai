@@ -2,87 +2,92 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Select Class - Textual Answers</title>
+  <title>Textual Answers – ProjectByAI</title>
   <style>
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-    }
-
-    h1 {
-      font-size: 2.8em;
-      animation: fadeIn 1s ease-out;
-      margin-bottom: 30px;
-    }
-
-    select {
-      padding: 15px 20px;
-      font-size: 1.1em;
-      border: none;
-      border-radius: 8px;
-      background: #1abc9c;
-      color: white;
-      cursor: pointer;
-      appearance: none;
-      outline: none;
-      animation: slideDown 1.2s ease-out;
-    }
-
-    select:hover {
-      background: #16a085;
-    }
-
-    footer {
-      position: absolute;
-      bottom: 15px;
+      background: linear-gradient(120deg, #f0f8ff, #e0ffff);
+      color: #333;
       text-align: center;
-      font-size: 0.9em;
-      color: #ccc;
-      animation: fadeIn 2s ease-in;
+      animation: fadeIn 1s ease-in-out;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-20px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-30px); }
-      to { opacity: 1; transform: translateY(0); }
+    .back-btn {
+      display: inline-block;
+      margin: 20px 15px 0;
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: #0056b3;
+    }
+
+    h1 {
+      margin-top: 10px;
+      font-size: 2.5em;
+    }
+
+    .grade-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 30px;
+    }
+
+    .grade-btn {
+      padding: 15px 25px;
+      margin: 10px;
+      font-size: 1.2em;
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .grade-btn:hover {
+      background-color: #218838;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.8em;
+      color: #666;
     }
   </style>
 </head>
 <body>
 
-  <h1>📘 Choose Your Class</h1>
+  <a href="index.html" class="back-btn">← Back to Home</a>
 
-  <select onchange="goToClass(this)">
-    <option disabled selected>Select a class</option>
-    <option value="class5.html">5th Standard</option>
-    <option value="class6.html">6th Standard</option>
-    <option value="class7.html">7th Standard</option>
-    <option value="class8.html">8th Standard</option>
-    <option value="class9.html">9th Standard</option>
-    <option value="class10.html">10th Standard</option>
-  </select>
+  <h1>Select Your Class</h1>
+  <div class="grade-container">
+    <button class="grade-btn" onclick="gotoClass(5)">Class 5</button>
+    <button class="grade-btn" onclick="gotoClass(6)">Class 6</button>
+    <button class="grade-btn" onclick="gotoClass(7)">Class 7</button>
+    <button class="grade-btn" onclick="gotoClass(8)">Class 8</button>
+    <button class="grade-btn" onclick="gotoClass(9)">Class 9</button>
+    <button class="grade-btn" onclick="gotoClass(10)">Class 10</button>
+  </div>
 
-  <footer>
-    Maharashtra State Board | Powered by AI & Aman Intelligence ✨
-  </footer>
+  <footer>Based on Maharashtra Board – Styled by Aman & AI 💫</footer>
 
   <script>
-    function goToClass(select) {
-      const page = select.value;
-      if (page) {
-        window.location.href = page;
-      }
+    function gotoClass(grade) {
+      window.location.href = `class${grade}.html`;
     }
   </script>
 
