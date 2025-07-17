@@ -15,31 +15,29 @@
     button { padding: 10px 20px; font-size: 1rem; border-radius: 30px; border: none; background: #00ffe7; color: #000; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 0 10px #00ffe7; }
     button:hover { background: #00bfa6; }
     footer { position: absolute; bottom: 10px; font-size: 0.8rem; color: #555; }
-    footer a { color: #00ffe7; text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
   <h1>👾 ProjectByAI</h1>
   <p>Your friendly, smart, and custom chatbot experience 💬</p>
-
   <input type="text" id="username" placeholder="Enter your name..." />
-
   <div class="btns">
     <button onclick="goToChat()">💬 Enter Chatbot</button>
+    <button onclick="goToTextual()">📝 Textual Answers</button>
     <button onclick="alert('I was made by AI — A for Aman, I for Intelligence ✨')">🤖 Meet the Bot</button>
   </div>
-
-  <footer>
-    Built with 💙 by AmanAI12 & ChatGPT • 
-    <a href="https://www.youtube.com/@itsdalilboi" target="_blank">YouTube @itsdalilboi</a>
-  </footer>
+  <footer>Built with 💙 by Aman & ChatGPT</footer>
 
   <script>
     function goToChat() {
       const name = document.getElementById('username').value.trim();
       if (name) localStorage.setItem("userName", name);
       window.location.href = "chat.html";
+    }
+    function goToTextual() {
+      const name = document.getElementById('username').value.trim();
+      if (name) localStorage.setItem("userName", name);
+      window.location.href = "textual.html";
     }
   </script>
 </body>
