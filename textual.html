@@ -2,94 +2,92 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Textual Answers – ProjectByAI</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" />
   <style>
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(120deg, #f0f8ff, #e0ffff);
-      color: #333;
-      text-align: center;
-      animation: fadeIn 1s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at top left, #0f2027, #203a43, #2c5364);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .back-btn {
-      display: inline-block;
-      margin: 20px 15px 0;
-      padding: 10px 20px;
-      background: #007bff;
+      align-self: flex-start;
+      margin: 20px;
+      padding: 10px 16px;
+      background: #00bcd4;
       color: white;
       text-decoration: none;
       border-radius: 6px;
       font-weight: bold;
-      transition: background 0.3s ease;
+      transition: background 0.3s;
     }
-
     .back-btn:hover {
-      background: #0056b3;
+      background: #0097a7;
     }
 
     h1 {
-      margin-top: 10px;
-      font-size: 2.5em;
+      margin-top: 0;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
     }
 
-    .grade-container {
+    .class-buttons {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      margin: 30px;
+      gap: 15px;
+      margin-bottom: 40px;
     }
 
-    .grade-btn {
-      padding: 15px 25px;
-      margin: 10px;
-      font-size: 1.2em;
-      background-color: #28a745;
-      color: #fff;
+    .class-btn {
+      padding: 15px 30px;
+      background: #4caf50;
+      color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
+      font-size: 1.1rem;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: transform 0.2s ease, background 0.3s ease;
     }
 
-    .grade-btn:hover {
-      background-color: #218838;
+    .class-btn:hover {
+      background: #43a047;
+      transform: scale(1.05);
     }
 
     footer {
-      margin-top: 40px;
-      font-size: 0.8em;
-      color: #666;
+      font-size: 0.8rem;
+      color: #cccccc;
+      margin-top: auto;
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
 
   <a href="index.html" class="back-btn">← Back to Home</a>
-
   <h1>Select Your Class</h1>
-  <div class="grade-container">
-    <button class="grade-btn" onclick="gotoClass(5)">Class 5</button>
-    <button class="grade-btn" onclick="gotoClass(6)">Class 6</button>
-    <button class="grade-btn" onclick="gotoClass(7)">Class 7</button>
-    <button class="grade-btn" onclick="gotoClass(8)">Class 8</button>
-    <button class="grade-btn" onclick="gotoClass(9)">Class 9</button>
-    <button class="grade-btn" onclick="gotoClass(10)">Class 10</button>
+
+  <div class="class-buttons">
+    <button class="class-btn" onclick="location.href='class5.html'">Class 5</button>
+    <button class="class-btn" onclick="location.href='class6.html'">Class 6</button>
+    <button class="class-btn" onclick="location.href='class7.html'">Class 7</button>
+    <button class="class-btn" onclick="location.href='class8.html'">Class 8</button>
+    <button class="class-btn" onclick="location.href='class9.html'">Class 9</button>
+    <button class="class-btn" onclick="location.href='class10.html'">Class 10</button>
   </div>
 
-  <footer>Based on Maharashtra Board – Styled by Aman & AI 💫</footer>
-
-  <script>
-    function gotoClass(grade) {
-      window.location.href = `class${grade}.html`;
-    }
-  </script>
+  <footer>
+    All content is based on the <strong>Maharashtra State Board</strong> curriculum.<br>
+    Designed with ❤️ by AI (Aman + Intelligence)
+  </footer>
 
 </body>
 </html>
