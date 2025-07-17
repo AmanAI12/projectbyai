@@ -2,187 +2,84 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Textual Answers - ProjectByAI</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet"/>
+  <title>Select Class - Textual Answers</title>
   <style>
     body {
-      font-family: 'Orbitron', sans-serif;
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-      color: #00ffee;
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       min-height: 100vh;
-      padding: 2rem;
-      text-align: center;
     }
+
     h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
+      margin-top: 50px;
+      font-size: 3em;
+      animation: fadeIn 1s ease-out;
     }
-    select, button {
-      padding: 10px 20px;
-      font-size: 1rem;
-      border-radius: 10px;
-      border: none;
-      margin: 10px;
-      cursor: pointer;
-      background: #00ffee;
-      color: #000;
+
+    .grade-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+      max-width: 600px;
+      margin-top: 50px;
+      width: 100%;
+      padding: 0 20px;
+      animation: slideUp 1.2s ease-out;
     }
-    .hidden { display: none; }
-    .section {
-      margin-top: 20px;
-      animation: fadeIn 0.5s ease;
+
+    .grade-buttons a {
+      background: #1abc9c;
+      padding: 15px;
+      text-align: center;
+      border-radius: 8px;
+      color: white;
+      text-decoration: none;
+      font-size: 1.2em;
+      transition: 0.3s;
     }
-    .answer-box {
-      background-color: rgba(255, 255, 255, 0.1);
+
+    .grade-buttons a:hover {
+      background: #16a085;
+      transform: scale(1.05);
+    }
+
+    footer {
+      margin-top: auto;
       padding: 20px;
-      border-radius: 15px;
-      margin-top: 20px;
-      color: #fff;
+      font-size: 0.9em;
+      color: #ccc;
+      animation: fadeIn 2s ease-in;
     }
+
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-  <h1>📝 Textual Answers</h1>
-
-  <div class="section">
-    <label>Select Class:</label><br/>
-    <select id="class-select" onchange="loadSubjects()">
-      <option value="">-- Choose Class --</option>
-      <option value="5">Class 5</option>
-      <option value="6">Class 6</option>
-      <option value="7">Class 7</option>
-      <option value="8">Class 8</option>
-      <option value="9">Class 9</option>
-      <option value="10">Class 10</option>
-    </select>
+  <h1>📘 Select Your Class</h1>
+  <div class="grade-buttons">
+    <a href="class5.html">5th Standard</a>
+    <a href="class6.html">6th Standard</a>
+    <a href="class7.html">7th Standard</a>
+    <a href="class8.html">8th Standard</a>
+    <a href="class9.html">9th Standard</a>
+    <a href="class10.html">10th Standard</a>
   </div>
 
-  <div class="section hidden" id="subject-section">
-    <label>Select Subject:</label><br/>
-    <select id="subject-select" onchange="loadChapters()"></select>
-  </div>
-
-  <div class="section hidden" id="chapter-section">
-    <label>Select Chapter:</label><br/>
-    <select id="chapter-select" onchange="loadQuestions()"></select>
-  </div>
-
-  <div class="section hidden" id="question-section">
-    <label>Select Question:</label><br/>
-    <select id="question-select" onchange="showAnswer()"></select>
-  </div>
-
-  <div class="section hidden answer-box" id="answer-section"></div>
-
-  <script>
-    const subjects = {
-      10: ["Math", "Science", "History"],
-      9: ["English", "Geography", "Math"],
-      8: ["Science", "Civics"],
-      7: ["Math", "EVS"],
-      6: ["History", "Science"],
-      5: ["English", "Math"]
-    };
-
-    const chapters = {
-      "Math": ["Numbers", "Algebra", "Geometry"],
-      "Science": ["Nutrition", "Motion", "Electricity"],
-      "History": ["Revolutions", "Empires"],
-      "English": ["Grammar", "Stories"]
-    };
-
-    const questions = {
-      "Numbers": ["What is a Prime Number?", "Explain Even and Odd Numbers"],
-      "Algebra": ["Define variable", "What is an equation?"]
-    };
-
-    const answers = {
-      "What is a Prime Number?": "A prime number is a number greater than 1 with only two factors: 1 and itself.",
-      "Explain Even and Odd Numbers": "Even numbers are divisible by 2, odd numbers are not.",
-      "Define variable": "A variable is a symbol that represents a value.",
-      "What is an equation?": "An equation shows that two expressions are equal."
-    };
-
-    function loadSubjects() {
-      const cls = document.getElementById("class-select").value;
-      const subjectSelect = document.getElementById("subject-select");
-      subjectSelect.innerHTML = "<option value=''>-- Choose Subject --</option>";
-
-      if (subjects[cls]) {
-        subjects[cls].forEach(sub => {
-          const opt = document.createElement("option");
-          opt.value = sub;
-          opt.text = sub;
-          subjectSelect.appendChild(opt);
-        });
-        document.getElementById("subject-section").classList.remove("hidden");
-      } else {
-        document.getElementById("subject-section").classList.add("hidden");
-      }
-
-      document.getElementById("chapter-section").classList.add("hidden");
-      document.getElementById("question-section").classList.add("hidden");
-      document.getElementById("answer-section").classList.add("hidden");
-    }
-
-    function loadChapters() {
-      const subject = document.getElementById("subject-select").value;
-      const chapterSelect = document.getElementById("chapter-select");
-      chapterSelect.innerHTML = "<option value=''>-- Choose Chapter --</option>";
-
-      if (chapters[subject]) {
-        chapters[subject].forEach(ch => {
-          const opt = document.createElement("option");
-          opt.value = ch;
-          opt.text = ch;
-          chapterSelect.appendChild(opt);
-        });
-        document.getElementById("chapter-section").classList.remove("hidden");
-      } else {
-        document.getElementById("chapter-section").classList.add("hidden");
-      }
-
-      document.getElementById("question-section").classList.add("hidden");
-      document.getElementById("answer-section").classList.add("hidden");
-    }
-
-    function loadQuestions() {
-      const chapter = document.getElementById("chapter-select").value;
-      const questionSelect = document.getElementById("question-select");
-      questionSelect.innerHTML = "<option value=''>-- Choose Question --</option>";
-
-      if (questions[chapter]) {
-        questions[chapter].forEach(q => {
-          const opt = document.createElement("option");
-          opt.value = q;
-          opt.text = q;
-          questionSelect.appendChild(opt);
-        });
-        document.getElementById("question-section").classList.remove("hidden");
-      } else {
-        document.getElementById("question-section").classList.add("hidden");
-      }
-
-      document.getElementById("answer-section").classList.add("hidden");
-    }
-
-    function showAnswer() {
-      const question = document.getElementById("question-select").value;
-      const answerBox = document.getElementById("answer-section");
-
-      if (answers[question]) {
-        answerBox.innerHTML = `<strong>Answer:</strong><br/>${answers[question]}`;
-        answerBox.classList.remove("hidden");
-      } else {
-        answerBox.innerHTML = "Answer not found.";
-        answerBox.classList.remove("hidden");
-      }
-    }
-  </script>
+  <footer>
+    Maharashtra State Board | Powered by AI & Aman Intelligence ✨
+  </footer>
 </body>
 </html>
