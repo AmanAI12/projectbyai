@@ -3,91 +3,190 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Textual Answers – ProjectByAI</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" />
+  <title>Class 5 Textual Answers | ProjectByAI</title>
   <style>
+    /* Animated background */
     body {
       margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: radial-gradient(circle at top left, #0f2027, #203a43, #2c5364);
-      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      background: radial-gradient(circle at center, #0f2027, #203a43, #2c5364);
+      color: #fff;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .back-btn {
-      align-self: flex-start;
-      margin: 20px;
-      padding: 10px 16px;
-      background: #00bcd4;
-      color: white;
-      text-decoration: none;
-      border-radius: 6px;
-      font-weight: bold;
-      transition: background 0.3s;
-    }
-    .back-btn:hover {
-      background: #0097a7;
+      overflow-x: hidden;
     }
 
     h1 {
-      margin-top: 0;
-      font-size: 2.5rem;
-      margin-bottom: 10px;
+      text-align: center;
+      margin-top: 30px;
     }
 
-    .class-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-      margin-bottom: 40px;
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
     }
 
-    .class-btn {
-      padding: 15px 30px;
-      background: #4caf50;
-      color: white;
+    select, .output-box {
+      width: 100%;
+      padding: 12px;
+      margin: 15px 0;
+      border-radius: 5px;
       border: none;
-      border-radius: 10px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: transform 0.2s ease, background 0.3s ease;
+      font-size: 16px;
     }
 
-    .class-btn:hover {
-      background: #43a047;
-      transform: scale(1.05);
+    select {
+      background-color: #333;
+      color: #fff;
     }
 
-    footer {
-      font-size: 0.8rem;
-      color: #cccccc;
-      margin-top: auto;
-      margin-bottom: 10px;
+    .output-box {
+      background: #1e1e1e;
+      color: #0f0;
+      white-space: pre-line;
+    }
+
+    .back-btn {
+      margin: 20px;
+      display: inline-block;
+      background-color: #007bff;
+      color: white;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .footer-note {
+      margin-top: 50px;
+      text-align: center;
+      font-size: 12px;
+      color: #ccc;
     }
   </style>
 </head>
 <body>
+  <a href="textual.html" class="back-btn">← Back to Textual Answers</a>
 
-  <a href="index.html" class="back-btn">← Back to Home</a>
-  <h1>Select Your Class</h1>
+  <div class="container">
+    <h1>Class 5 Textual Answers</h1>
 
-  <div class="class-buttons">
-    <button class="class-btn" onclick="location.href='class5.html'">Class 5</button>
-    <button class="class-btn" onclick="location.href='class6.html'">Class 6</button>
-    <button class="class-btn" onclick="location.href='class7.html'">Class 7</button>
-    <button class="class-btn" onclick="location.href='class8.html'">Class 8</button>
-    <button class="class-btn" onclick="location.href='class9.html'">Class 9</button>
-    <button class="class-btn" onclick="location.href='class10.html'">Class 10</button>
+    <!-- Subject Dropdown -->
+    <select id="subject" onchange="loadChapters()">
+      <option value="">📚 Select Subject</option>
+      <option value="english">English</option>
+      <option value="math">Mathematics</option>
+      <option value="evs">Environmental Studies</option>
+    </select>
+
+    <!-- Chapter Dropdown -->
+    <select id="chapter" onchange="loadQuestions()" disabled>
+      <option value="">📘 Select Chapter</option>
+    </select>
+
+    <!-- Question Dropdown -->
+    <select id="question" onchange="showAnswer()" disabled>
+      <option value="">❓ Select Question</option>
+    </select>
+
+    <!-- Final Answer Output -->
+    <div class="output-box" id="answerBox">Answer will appear here...</div>
   </div>
 
-  <footer>
-    All content is based on the <strong>Maharashtra State Board</strong> curriculum.<br>
-    Designed with ❤️ by AI (Aman + Intelligence)
-  </footer>
+  <div class="footer-note">
+    Based on Maharashtra Board | Inspired by Shalaa.com | Built by AmanAI12
+  </div>
 
+  <script>
+    const data = {
+      english: {
+        "Chapter 1: A Happy Song": {
+          "What is the theme of the poem?": "The poem expresses joy and positivity through nature’s beauty.",
+          "Who is the speaker in the poem?": "A cheerful child observing the world around."
+        },
+        "Chapter 2: Go and Come": {
+          "What did the boy ask his mother?": "He asked if he could go out to play.",
+          "What lesson did the story teach?": "It teaches respectful communication and understanding."
+        }
+      },
+      math: {
+        "Chapter 1: Numbers": {
+          "What is the place value of 5 in 352?": "The place value of 5 is 50.",
+          "Write the number name of 408.": "Four hundred eight."
+        }
+      },
+      evs: {
+        "Chapter 1: Our Surroundings": {
+          "What are natural things?": "Things like trees, rivers, sun, animals found in nature.",
+          "Name two man-made things.": "Buildings and vehicles."
+        }
+      }
+    };
+
+    function loadChapters() {
+      const subject = document.getElementById('subject').value;
+      const chapterSelect = document.getElementById('chapter');
+      const questionSelect = document.getElementById('question');
+      const answerBox = document.getElementById('answerBox');
+
+      chapterSelect.innerHTML = '<option value="">📘 Select Chapter</option>';
+      questionSelect.innerHTML = '<option value="">❓ Select Question</option>';
+      answerBox.textContent = "Answer will appear here...";
+      questionSelect.disabled = true;
+
+      if (subject && data[subject]) {
+        Object.keys(data[subject]).forEach(ch => {
+          const opt = document.createElement('option');
+          opt.value = ch;
+          opt.textContent = ch;
+          chapterSelect.appendChild(opt);
+        });
+        chapterSelect.disabled = false;
+      } else {
+        chapterSelect.disabled = true;
+      }
+    }
+
+    function loadQuestions() {
+      const subject = document.getElementById('subject').value;
+      const chapter = document.getElementById('chapter').value;
+      const questionSelect = document.getElementById('question');
+      const answerBox = document.getElementById('answerBox');
+
+      questionSelect.innerHTML = '<option value="">❓ Select Question</option>';
+      answerBox.textContent = "Answer will appear here...";
+
+      if (subject && chapter && data[subject][chapter]) {
+        Object.keys(data[subject][chapter]).forEach(q => {
+          const opt = document.createElement('option');
+          opt.value = q;
+          opt.textContent = q;
+          questionSelect.appendChild(opt);
+        });
+        questionSelect.disabled = false;
+      } else {
+        questionSelect.disabled = true;
+      }
+    }
+
+    function showAnswer() {
+      const subject = document.getElementById('subject').value;
+      const chapter = document.getElementById('chapter').value;
+      const question = document.getElementById('question').value;
+      const answerBox = document.getElementById('answerBox');
+
+      if (subject && chapter && question) {
+        answerBox.textContent = data[subject][chapter][question];
+      } else {
+        answerBox.textContent = "Answer will appear here...";
+      }
+    }
+  </script>
 </body>
 </html>
