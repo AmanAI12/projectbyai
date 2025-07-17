@@ -4,61 +4,185 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Textual Answers - ProjectByAI</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet"/>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
     body {
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      color: #00ffe7;
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #00ffee;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 50px 20px;
+      padding: 2rem;
       text-align: center;
     }
     h1 {
       font-size: 2.5rem;
-      margin-bottom: 20px;
-      text-shadow: 0 0 10px #00ffe7;
+      margin-bottom: 1rem;
     }
-    p {
-      font-size: 1.1rem;
-      color: #c0f0ff;
-      max-width: 800px;
-      margin-bottom: 20px;
-    }
-    .back-btn {
-      margin-top: 30px;
+    select, button {
       padding: 10px 20px;
-      background-color: #00ffe7;
-      color: #000;
+      font-size: 1rem;
+      border-radius: 10px;
       border: none;
-      border-radius: 30px;
+      margin: 10px;
       cursor: pointer;
-      font-weight: bold;
-      box-shadow: 0 0 10px #00ffe7;
-      transition: 0.3s;
+      background: #00ffee;
+      color: #000;
     }
-    .back-btn:hover {
-      background-color: #00cbb9;
+    .hidden { display: none; }
+    .section {
+      margin-top: 20px;
+      animation: fadeIn 0.5s ease;
     }
-    footer {
-      margin-top: auto;
-      color: #888;
-      font-size: 0.8rem;
-      padding-bottom: 20px;
+    .answer-box {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 15px;
+      margin-top: 20px;
+      color: #fff;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-  <h1>📘 Textual Answers</h1>
-  <p>This section is under development. Soon, you’ll see a list of hand-written answers to common questions, fun facts, and useful information — all written in a clean, study-friendly format.</p>
-  <p>Stay tuned! Updates dropping faster than a school bell rings 🔔😉</p>
-  
-  <button class="back-btn" onclick="window.location.href='index.html'">⬅️ Go Back</button>
-  
-  <footer>Made by AmanAI & ChatGPT ⚡</footer>
+  <h1>📝 Textual Answers</h1>
+
+  <div class="section">
+    <label>Select Class:</label><br/>
+    <select id="class-select" onchange="loadSubjects()">
+      <option value="">-- Choose Class --</option>
+      <option value="5">Class 5</option>
+      <option value="6">Class 6</option>
+      <option value="7">Class 7</option>
+      <option value="8">Class 8</option>
+      <option value="9">Class 9</option>
+      <option value="10">Class 10</option>
+    </select>
+  </div>
+
+  <div class="section hidden" id="subject-section">
+    <label>Select Subject:</label><br/>
+    <select id="subject-select" onchange="loadChapters()"></select>
+  </div>
+
+  <div class="section hidden" id="chapter-section">
+    <label>Select Chapter:</label><br/>
+    <select id="chapter-select" onchange="loadQuestions()"></select>
+  </div>
+
+  <div class="section hidden" id="question-section">
+    <label>Select Question:</label><br/>
+    <select id="question-select" onchange="showAnswer()"></select>
+  </div>
+
+  <div class="section hidden answer-box" id="answer-section"></div>
+
+  <script>
+    const subjects = {
+      10: ["Math", "Science", "History"],
+      9: ["English", "Geography", "Math"],
+      8: ["Science", "Civics"],
+      7: ["Math", "EVS"],
+      6: ["History", "Science"],
+      5: ["English", "Math"]
+    };
+
+    const chapters = {
+      "Math": ["Numbers", "Algebra", "Geometry"],
+      "Science": ["Nutrition", "Motion", "Electricity"],
+      "History": ["Revolutions", "Empires"],
+      "English": ["Grammar", "Stories"]
+    };
+
+    const questions = {
+      "Numbers": ["What is a Prime Number?", "Explain Even and Odd Numbers"],
+      "Algebra": ["Define variable", "What is an equation?"]
+    };
+
+    const answers = {
+      "What is a Prime Number?": "A prime number is a number greater than 1 with only two factors: 1 and itself.",
+      "Explain Even and Odd Numbers": "Even numbers are divisible by 2, odd numbers are not.",
+      "Define variable": "A variable is a symbol that represents a value.",
+      "What is an equation?": "An equation shows that two expressions are equal."
+    };
+
+    function loadSubjects() {
+      const cls = document.getElementById("class-select").value;
+      const subjectSelect = document.getElementById("subject-select");
+      subjectSelect.innerHTML = "<option value=''>-- Choose Subject --</option>";
+
+      if (subjects[cls]) {
+        subjects[cls].forEach(sub => {
+          const opt = document.createElement("option");
+          opt.value = sub;
+          opt.text = sub;
+          subjectSelect.appendChild(opt);
+        });
+        document.getElementById("subject-section").classList.remove("hidden");
+      } else {
+        document.getElementById("subject-section").classList.add("hidden");
+      }
+
+      document.getElementById("chapter-section").classList.add("hidden");
+      document.getElementById("question-section").classList.add("hidden");
+      document.getElementById("answer-section").classList.add("hidden");
+    }
+
+    function loadChapters() {
+      const subject = document.getElementById("subject-select").value;
+      const chapterSelect = document.getElementById("chapter-select");
+      chapterSelect.innerHTML = "<option value=''>-- Choose Chapter --</option>";
+
+      if (chapters[subject]) {
+        chapters[subject].forEach(ch => {
+          const opt = document.createElement("option");
+          opt.value = ch;
+          opt.text = ch;
+          chapterSelect.appendChild(opt);
+        });
+        document.getElementById("chapter-section").classList.remove("hidden");
+      } else {
+        document.getElementById("chapter-section").classList.add("hidden");
+      }
+
+      document.getElementById("question-section").classList.add("hidden");
+      document.getElementById("answer-section").classList.add("hidden");
+    }
+
+    function loadQuestions() {
+      const chapter = document.getElementById("chapter-select").value;
+      const questionSelect = document.getElementById("question-select");
+      questionSelect.innerHTML = "<option value=''>-- Choose Question --</option>";
+
+      if (questions[chapter]) {
+        questions[chapter].forEach(q => {
+          const opt = document.createElement("option");
+          opt.value = q;
+          opt.text = q;
+          questionSelect.appendChild(opt);
+        });
+        document.getElementById("question-section").classList.remove("hidden");
+      } else {
+        document.getElementById("question-section").classList.add("hidden");
+      }
+
+      document.getElementById("answer-section").classList.add("hidden");
+    }
+
+    function showAnswer() {
+      const question = document.getElementById("question-select").value;
+      const answerBox = document.getElementById("answer-section");
+
+      if (answers[question]) {
+        answerBox.innerHTML = `<strong>Answer:</strong><br/>${answers[question]}`;
+        answerBox.classList.remove("hidden");
+      } else {
+        answerBox.innerHTML = "Answer not found.";
+        answerBox.classList.remove("hidden");
+      }
+    }
+  </script>
 </body>
 </html>
-
